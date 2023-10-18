@@ -7,8 +7,7 @@ import java.io.InputStreamReader;
 
 public class DisplayFile {
     public static void main(String[] args) {
-        String filePath = "/Users/daanandasilva/Downloads/Basic-Input-&-Output-including-java" +
-                ".util-Load-Big-Location-and-Exits-Files-Source-code/directions.txt";
+        String filePath = "/Users/daanandasilva/Java/JavaChatGPT/Folder of read and write files/Chapter 7 File I:O Mini Lesson.txt";
 
         try (
                 FileInputStream fileInputStream = new FileInputStream(filePath);
