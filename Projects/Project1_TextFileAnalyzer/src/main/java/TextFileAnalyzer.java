@@ -3,109 +3,83 @@ package Projects.Project1_TextFileAnalyzer.src.main.java;
 import java.util.HashMap;
 
 public class TextFileAnalyzer {
-    private String currentLine;
-    private HashMap<String, Integer> wordFrequencyMap;
-    private HashMap<Character, Integer> letterFrequencyMap;
-    private int wordCount;
-    private int paragraphCount;
-
-    // CONSTRUCTORS
-
-    public TextFileAnalyzer() {
-        this.currentLine = "";
-        this.wordFrequencyMap = new HashMap<>();
-        this.letterFrequencyMap = new HashMap<>();
-        this.wordCount = 0;
-        this.paragraphCount = 0;
-    }
 
     // PUBLIC METHODS
+
     /**
-     * @param currentLine sets the current line.
+     * @param text sets the current line.
      */
-    public void takeInNextLine(String currentLine) {
-        if (currentLine != null) this.currentLine = currentLine;
+    private void validateInputText(String text) {
+        if (text == null) {
+            throw new NullPointerException("Invalid Input Text!");
+        }
     }
 
     /**
-     * Performs analytics on the currentLine
+     * Performs analytics on the inputText
+     * @return TextAnalysisResult
      */
-    public void performAnalytics() {
-        paragraphCount();
-        preprocessLine();
-        wordCount();
-        wordFrequency();
-        letterFrequency();
+    public TextAnalysisResult analyzeText(String inputText) {
+        // Validate input
+        validateInputText(inputText);
+        // Preprocess string
+        String processedText = preprocessText(inputText);
+        // Perform Analytics
+        int paragraphCount = paragraphCount(processedText);
+        int wordCount = wordCount(processedText);
+        HashMap<String, Integer> wordFrequency = wordFrequency(processedText);
+        HashMap<Character, Integer> letterFrequency = letterFrequency(processedText);
+        return new TextAnalysisResult(paragraphCount, wordCount, wordFrequency, letterFrequency);
     }
 
-    /**
-     * Prints out the current analytics
-     */
-    public void printAnalytics() {
-    /*
-    private HashMap<String, Integer> wordFrequency;
-    private HashMap<String, Integer> letterFrequency;
-    private int wordCount;
-    private int paragraphCount;
-    */
-        System.out.println("ANALYTICS");
-        System.out.println("Word count:" + wordCount);
-        System.out.println("Paragraph count:" + paragraphCount);
-        System.out.println("Word frequency:" + wordFrequencyMap);
-        System.out.println("Letter frequency:" + letterFrequencyMap);
-    }
-
-
-    /**
-     * Resets the analytics
-     */
-    public void resetStatistics() {
-        currentLine = "";
-        wordFrequencyMap.clear();
-        letterFrequencyMap.clear();
-        wordCount = 0;
-        paragraphCount = 0;
-    }
 
     // PRIVATE METHODS
+
     /**
-     *
+     * @return preprocessed line
      */
-    private void preprocessLine() {
-        currentLine = currentLine.toLowerCase().replaceAll("[^a-z0-9 ]", "").trim();
+    private String preprocessText(String inputText) {
+        inputText = inputText.toLowerCase()
+                .replaceAll("[^a-z0-9 \\n]", "") // Remove any character not a-z, 0-9, space, or newline
+                .replaceAll("[ ]{2,}", " ")      // Replace two or more whitespace-characters with a single space
+                .replaceAll("\\n{2,}", " \n\n")  // Insert a space before and after two newline characters
+                .trim();
+        return inputText;
     }
 
     /**
-     *
+     * @return word count
      */
-    private void wordCount() {
-        for (int i = 0; i < currentLine.length(); i++) {
-            if (currentLine.charAt(i) == ' ') {
-                wordCount++;
-            }
-        }
-        wordCount++;
+    private int wordCount(String inputText) {
+        return inputText.split(" ").length;
     }
 
     /**
-     *
+     * @return word frequency hashmap, keys being the words, and values being the frequencies of those words
      */
-    private void wordFrequency() {
-        String[] words = currentLine.split(" ");
-        for (String word : words) {
+    private HashMap<String, Integer> wordFrequency(String inputText) {
+        // preprocess more - removes newlines
+        String modifiedInputText = inputText.replaceAll("[\n]", "");
+
+        HashMap<String, Integer> wordFrequencyMap = new HashMap<>();
+        for (String word : modifiedInputText.split(" ")) {
             if (wordFrequencyMap.containsKey(word)) {
                 wordFrequencyMap.put(word, wordFrequencyMap.get(word) + 1);
             } else {
                 wordFrequencyMap.put(word, 1);
             }
         }
+        return wordFrequencyMap;
     }
 
     /**
-     *
+     * @return word frequency hashmap, keys being the letters, and values being the frequencies of those letters
      */
-    private void letterFrequency() {
-        String longString = currentLine.replaceAll(" ", "");
+    private HashMap<Character, Integer> letterFrequency(String inputText) {
+        // preprocess more - removes spaces and newlines
+        String longString = inputText.replaceAll("[\\s\n]", "");
+
+        HashMap<Character, Integer> letterFrequencyMap = new HashMap<>();
         for (char character : longString.toCharArray()) {
             if (letterFrequencyMap.containsKey(character)) {
                 letterFrequencyMap.put(character, letterFrequencyMap.get(character) + 1);
@@ -113,16 +87,13 @@ public class TextFileAnalyzer {
                 letterFrequencyMap.put(character, 1);
             }
         }
+        return letterFrequencyMap;
     }
 
     /**
-     * note - must be done before preprocessing
-     *
      * @return number of new line characters found in pairs
      */
-    private void paragraphCount() {
-        paragraphCount += currentLine.split("\n\n").length;
+    private int paragraphCount(String inputText) {
+        return inputText.split("\n\n").length;
     }
-
-
 }

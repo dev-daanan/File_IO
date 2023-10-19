@@ -3,14 +3,16 @@ package Projects.Project1_TextFileAnalyzer.src.main.java;
 public class Main {
     public static void main(String[] args) {
         String testString = """
-                one# two,,, three three four five si---x      
-                one five, four three""";
+                one two three
+                                
+                four five six six
+                                
+                eight nine ten.
+                """;
+        TextFileAnalyzer analyzer = new TextFileAnalyzer();
 
-        TextFileAnalyzer textFileAnalyzer = new TextFileAnalyzer();
+        TextAnalysisResult text = analyzer.analyzeText(testString);
+        text.printAnalytics();
 
-        textFileAnalyzer.takeInNextLine(testString);
-        textFileAnalyzer.performAnalytics();
-        textFileAnalyzer.printAnalytics();
-        textFileAnalyzer.resetStatistics();
     }
 }
