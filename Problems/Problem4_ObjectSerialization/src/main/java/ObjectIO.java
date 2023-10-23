@@ -11,10 +11,9 @@ public class ObjectIO {
         Person[] persons = {monica, joey, ross, rachel};
 
         String filePath = "/Users/daanandasilva/Java/JavaChatGPT/Folder of read and write files/PersonObjects.dat";
+
         // Serialization
-        try (
-                ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(filePath))
-        ) {
+        try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(filePath))) {
             for (Person person : persons) {
                 objectOutputStream.writeObject(person);
                 System.out.println("Object has been serialized and written to: " + filePath);
@@ -22,14 +21,13 @@ public class ObjectIO {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         System.out.println("-".repeat(50));
         System.out.println("-".repeat(50));
         System.out.println("-".repeat(50));
 
         // Deserialization
-        try (
-                ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(filePath))
-        ) {
+        try (ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(filePath))) {
             while (true) {
                 try {
                     Person deserializedPerson = (Person) objectInputStream.readObject();
